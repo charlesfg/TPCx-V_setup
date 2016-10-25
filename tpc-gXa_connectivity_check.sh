@@ -14,4 +14,4 @@ do
     ./traderesult 2>&1 | grep Success
     rm -fv traderesult    
     sed -i 's/DSN=PSQL[1-3]/DSN=PSQL3/g' /opt/VDb/pgsql/dml/test_programs/traderesult.c
-done
+done	
