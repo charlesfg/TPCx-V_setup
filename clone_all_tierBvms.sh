@@ -1,5 +1,6 @@
 #!/bin/bash -x
 
+set -o errexit
 
 
 declare -A IP_ADDR  # Create an associative array
@@ -34,7 +35,7 @@ for i in `seq 1 4`; do
 		/opt/tpc/libguestfs-1.34.2/run virt-customize \
 				--domain $L \
 				--hostname $L \
-				--edit /etc/sysconfig/network-scripts/ifcfg-eth0:"s/10.131.6.20/${IP_ADDR[$L]}/g" \
+				--edit /etc/sysconfig/network-scripts/ifcfg-eth0:"s/10.131.6.32:/${IP_ADDR[$L]}/g" \
 				--edit /etc/fstab:'eof && do{print "$_"; print "/dev/vdb1\t/vgenstore\text4\tdefaults\t0\t1\n"}' \
 				--edit /etc/fstab:'eof && do{print "$_"; print "/dev/vdc1\t/dbstore\text4\tnofail,noatime,nodiratime,nobarrier\t0\t1\n"}'
 
@@ -42,15 +43,18 @@ for i in `seq 1 4`; do
 		virsh start $L
 		echo ":: Wait until it boot"
 		sleep 20 
+		# Here we need to run as the user that have ssh passwordless permission on the base Tier B vm
+		su charles <<EOF
 		echo ":: Setup the DB folders"
-		ssh root@${IP_ADDR[$L]} "bash -x setup_dbstore_folders.sh"
+		ssh -o "StrictHostKeyChecking no" root@${IP_ADDR[$L]} "bash -x setup_dbstore_folders.sh"
 		echo ":: Setup Postgres"
-		ssh root@${IP_ADDR[$L]} "bash -x setup_postgres.sh"		
+		ssh -o "StrictHostKeyChecking no"  root@${IP_ADDR[$L]} "bash -x setup_postgres.sh"		
 		echo ":: Create all databases"
-		ssh postgres@${IP_ADDR[$L]} "bash -x create_database.sh"
-		exit;
+		ssh -o "StrictHostKeyChecking no"  postgres@${IP_ADDR[$L]} "bash -x create_database.sh"
+EOF
 
-		
+
+		exit;		
 	done
 done
 
