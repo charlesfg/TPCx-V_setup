@@ -24,14 +24,14 @@ for i in `seq 1 4`; do
 		fi
 		L=tpc-g${i}b${j}		
 		echo ":: Cloning the $L VM .... "
-		echo virt-clone --original tpc-g1b1 --name $L --auto-clone
+		virt-clone --original tpc-g1b1 --name $L --auto-clone
 		echo ":: Attach the storage for flat files and the dbstore"
-		echo virsh attach-disk $L --source /var/lib/libvirt/images/tpc-flatfiles.img \
+		virsh attach-disk $L --source /var/lib/libvirt/images/tpc-flatfiles.img \
 			--target vdb --persistent
-		echo virsh attach-disk $L --source /var/lib/libvirt/images/${L}-dbstore.img \
+		virsh attach-disk $L --source /var/lib/libvirt/images/${L}-dbstore.img \
 			--target vdc --persistent
 
-		echo /opt/tpc/libguestfs-1.34.2/run virt-customize \
+		/opt/tpc/libguestfs-1.34.2/run virt-customize \
 				--domain $L \
 				--hostname $L \
 				--edit /etc/sysconfig/network-scripts/ifcfg-eth0:"s/10.131.6.20/${IP_ADDR[$L]}/g" \
@@ -39,15 +39,15 @@ for i in `seq 1 4`; do
 				--edit /etc/fstab:'eof && do{print "$_"; print "/dev/vdc1\t/dbstore\text4\tnofail,noatime,nodiratime,nobarrier\t0\t1\n"}'
 
 		echo ":: Start the vm"
-		echo virsh start $L
+		virsh start $L
 		echo ":: Wait until it boot"
-		echo sleep 20 
+		sleep 20 
 		echo ":: Setup the DB folders"
-		echo ssh root@${IP_ADDR[$L]} "bash -x setup_dbstore_folders.sh"
+		ssh root@${IP_ADDR[$L]} "bash -x setup_dbstore_folders.sh"
 		echo ":: Setup Postgres"
-		echo ssh root@${IP_ADDR[$L]} "bash -x setup_postgres.sh"		
+		ssh root@${IP_ADDR[$L]} "bash -x setup_postgres.sh"		
 		echo ":: Create all databases"
-		echo ssh postgres@${IP_ADDR[$L]} "bash -x create_database.sh"
+		ssh postgres@${IP_ADDR[$L]} "bash -x create_database.sh"
 		exit;
 
 		
