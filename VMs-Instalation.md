@@ -1,1 +1,0 @@
-# Help on how to install, clone and manipulate the VMs
