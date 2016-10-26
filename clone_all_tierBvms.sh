@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-set -o errexit
+#set -o errexit
 
 
 declare -A IP_ADDR  # Create an associative array
@@ -23,6 +23,9 @@ for i in `seq 1 4`; do
 		if [[ $i -eq 1 && $j -eq 1 ]]; then
 			continue;
 		fi
+		if [[ $i -eq 1 && $j -eq 2 ]]; then
+			continue;
+		fi
 		L=tpc-g${i}b${j}		
 		echo ":: Cloning the $L VM .... "
 		virt-clone --original tpc-g1b1 --name $L --auto-clone
@@ -35,26 +38,21 @@ for i in `seq 1 4`; do
 		/opt/tpc/libguestfs-1.34.2/run virt-customize \
 				--domain $L \
 				--hostname $L \
-				--edit /etc/sysconfig/network-scripts/ifcfg-eth0:"s/10.131.6.32:/${IP_ADDR[$L]}/g" \
+				--edit /etc/sysconfig/network-scripts/ifcfg-eth0:"s/10.131.6.32/${IP_ADDR[$L]}/g" \
 				--edit /etc/fstab:'eof && do{print "$_"; print "/dev/vdb1\t/vgenstore\text4\tdefaults\t0\t1\n"}' \
 				--edit /etc/fstab:'eof && do{print "$_"; print "/dev/vdc1\t/dbstore\text4\tnofail,noatime,nodiratime,nobarrier\t0\t1\n"}'
 
 		echo ":: Start the vm"
 		virsh start $L
 		echo ":: Wait until it boot"
-		sleep 20 
+		sleep 30
 		# Here we need to run as the user that have ssh passwordless permission on the base Tier B vm
-		su charles <<EOF
 		echo ":: Setup the DB folders"
-		ssh -o "StrictHostKeyChecking no" root@${IP_ADDR[$L]} "bash -x setup_dbstore_folders.sh"
+		su charles -c "ssh -o 'StrictHostKeyChecking no' root@${IP_ADDR[$L]} 'bash -x setup_dbstore_folders.sh'"
 		echo ":: Setup Postgres"
-		ssh -o "StrictHostKeyChecking no"  root@${IP_ADDR[$L]} "bash -x setup_postgres.sh"		
+		su charles -c "ssh -o 'StrictHostKeyChecking no'  root@${IP_ADDR[$L]} 'bash -x setup_postgres.sh'"
 		echo ":: Create all databases"
-		ssh -o "StrictHostKeyChecking no"  postgres@${IP_ADDR[$L]} "bash -x create_database.sh"
-EOF
-
-
-		exit;		
+		su charles -c "ssh -o 'StrictHostKeyChecking no'  postgres@${IP_ADDR[$L]} 'bash -x create_database.sh'"
 	done
 done
 
