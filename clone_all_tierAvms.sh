@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-#set -o errexit
+set -o errexit
 
 
 declare -A IP_ADDR  # Create an associative array
@@ -29,7 +29,7 @@ for i in `seq 1 4`; do
 	/opt/tpc/libguestfs-1.34.2/run virt-customize \
 			--domain $L \
 			--hostname $L \
-			--edit /etc/sysconfig/network-scripts/ifcfg-eth0:"s/10.131.6.32/${IP_ADDR[$L]}/g" 
+			--edit /etc/sysconfig/network-scripts/ifcfg-eth0:"s/10.131.6.31/${IP_ADDR[$L]}/g" 
 	echo ":: Start the vm"
 	virsh start $L
 	echo ":: Wait until it boot"
