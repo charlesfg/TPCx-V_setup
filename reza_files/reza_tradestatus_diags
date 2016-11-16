@@ -1,0 +1,17 @@
+Connected
+Returned connection string was:
+	DSN=PSQL3;DATABASE=tpcv;SERVER=w1-tpcv-vm-60;PORT=5432;UID=tpcv;PWD=tpcv;SSLmode=disable;ReadOnly=0;Protocol=7.4;FakeOidIndex=0;ShowOidColumn=0;RowVersioning=0;ShowSystemTables=0;ConnSettings=;Fetch=100;Socket=4096;UnknownSizes=0;MaxVarcharSize=255;MaxLongVarcharSize=8190;Debug=0;CommLog=0;Optimizer=0;Ksqo=1;UseDeclareFetch=0;TextAsLongVarchar=1;UnknownsAsLongVarchar=0;BoolsAsChar=1;Parse=0;CancelAsFreeStmt=0;ExtraSysTablePrefixes=dd_;;LFConversion=0;UpdatableCursors=1;DisallowPremature=0;TrueIsMinus1=0;BI=0;ByteaAsLongVarBinary=0;UseServerSidePrepare=1;LowerCaseIdentifier=0;
+Query: select * from TradeStatusFrame1(?)
+myval=43000000001
+Bind Success
+SQL Failed
+
+The driver reported the following diagnostics whilst running SQLExecDirect
+
+before SQLGetDiagRec
+before if
+HY000:1:110:
+before SQLGetDiagRec
+before if
+leaving extract_error
+
