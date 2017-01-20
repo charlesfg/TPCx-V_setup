@@ -20,7 +20,7 @@ cd TPCx-V_setup
 bash format_dbstore.sh
 bash setup_dbstore_folders.sh
 bash setup_postgres.sh
-bash create_database.sh
+su postgres -c "bash create_database.sh"
 su postgres -c "bash -x backup_db.sh"
 su postgres -c "bash restore_db.sh"
 
