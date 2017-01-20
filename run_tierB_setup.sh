@@ -18,3 +18,13 @@ git clone https://github.com/charlesfg/TPCx-V_setup.git
 cd TPCx-V_setup
 
 bash format_dbstore.sh
+bash setup_dbstore_folders.sh
+bash setup_postgres.sh
+bash create_database.sh
+
+
+cat <<EOF
+---------------------------------------------------------------
+                          !!DONE!!
+---------------------------------------------------------------
+EOF

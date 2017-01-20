@@ -1,7 +1,10 @@
 #!/bin/bash -x
 
+
+set -o errexit
+
 PGDATA=/dbstore/tpcv-data
-GUEST_IP=`ifconfig | grep 10.131.6 | awk '{print $2}'`
+GUEST_IP=`ifconfig | grep 10.0.0 | awk '{print $2}'`
 
 cat <<EOF  >>/etc/systemd/system/postgresql-9.3.service
 .include /lib/systemd/system/postgresql-9.3.service

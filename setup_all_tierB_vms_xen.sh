@@ -27,31 +27,9 @@ for i in `seq 1 4`; do
 		# fi
 		L=tpc-g${i}b${j}		
 		echo ":: Setup the $L VM .... "
-		virt-clone --original tpc-g1b1 --name $L --auto-clone
-		echo ":: Attach the storage for flat files and the dbstore"
-		virsh attach-disk $L --source /var/lib/libvirt/images/tpc-flatfiles.img \
-			--target vdb --persistent
-		virsh attach-disk $L --source /var/lib/libvirt/images/${L}-dbstore.img \
-			--target vdc --persistent
-
-		/opt/tpc/libguestfs-1.34.2/run virt-customize \
-				--domain $L \
-				--hostname $L \
-				--edit /etc/sysconfig/network-scripts/ifcfg-eth0:"s/10.131.6.32/${IP_ADDR[$L]}/g" \
-				--edit /etc/fstab:'eof && do{print "$_"; print "/dev/vdb1\t/vgenstore\text4\tdefaults\t0\t1\n"}' \
-				--edit /etc/fstab:'eof && do{print "$_"; print "/dev/vdc1\t/dbstore\text4\tnofail,noatime,nodiratime,nobarrier\t0\t1\n"}'
-
-		echo ":: Start the vm"
-		virsh start $L
-		echo ":: Wait until it boot"
-		sleep 30
-		# Here we need to run as the user that have ssh passwordless permission on the base Tier B vm
-		echo ":: Setup the DB folders"
-		su charles -c "ssh -o 'StrictHostKeyChecking no' root@${IP_ADDR[$L]} 'bash -x setup_dbstore_folders.sh'"
-		echo ":: Setup Postgres"
-		su charles -c "ssh -o 'StrictHostKeyChecking no'  root@${IP_ADDR[$L]} 'bash -x setup_postgres.sh'"
-		echo ":: Create all databases"
-		su charles -c "ssh -o 'StrictHostKeyChecking no'  postgres@${IP_ADDR[$L]} 'bash -x create_database.sh'"
+		scp  run_tierB_setup.sh ${L}:~
+		ssh ${L} bash run_tierB_setup.sh
+		exit 0
 	done
 done
 
