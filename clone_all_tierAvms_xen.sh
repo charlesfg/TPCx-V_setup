@@ -5,18 +5,18 @@ set -o errexit
 
 declare -A IP_ADDR  # Create an associative array
 
-IP_ADDR[tpc-g1a]=10.131.6.31
-IP_ADDR[tpc-g1b1]=10.131.6.32
-IP_ADDR[tpc-g1b2]=10.131.6.33
-IP_ADDR[tpc-g2a]=10.131.6.34
-IP_ADDR[tpc-g2b1]=10.131.6.35
-IP_ADDR[tpc-g2b2]=10.131.6.36
-IP_ADDR[tpc-g3a]=10.131.6.37
-IP_ADDR[tpc-g3b1]=10.131.6.38
-IP_ADDR[tpc-g3b2]=10.131.6.39
-IP_ADDR[tpc-g4a]=10.131.6.40
-IP_ADDR[tpc-g4b1]=10.131.6.41
-IP_ADDR[tpc-g4b2]=10.131.6.42
+IP_ADDR[tpc-g1a]=10.0.0.31
+IP_ADDR[tpc-g1b1]=10.0.0.32
+IP_ADDR[tpc-g1b2]=10.0.0.33
+IP_ADDR[tpc-g2a]=10.0.0.34
+IP_ADDR[tpc-g2b1]=10.0.0.35
+IP_ADDR[tpc-g2b2]=10.0.0.36
+IP_ADDR[tpc-g3a]=10.0.0.37
+IP_ADDR[tpc-g3b1]=10.0.0.38
+IP_ADDR[tpc-g3b2]=10.0.0.39
+IP_ADDR[tpc-g4a]=10.0.0.40
+IP_ADDR[tpc-g4b1]=10.0.0.41
+IP_ADDR[tpc-g4b2]=10.0.0.42
 
 for i in `seq 1 4`; do	
 	if [[ $i -eq 1 ]]; then
@@ -29,7 +29,7 @@ for i in `seq 1 4`; do
 	/opt/tpc/libguestfs-1.34.2/run virt-customize \
 			--domain $L \
 			--hostname $L \
-			--edit /etc/sysconfig/network-scripts/ifcfg-eth0:"s/10.131.6.31/${IP_ADDR[$L]}/g" 
+			--edit /etc/sysconfig/network-scripts/ifcfg-eth0:"s/10.0.0.31/${IP_ADDR[$L]}/g" 
 	echo ":: Start the vm"
 	virsh start $L
 	echo ":: Wait until it boot"
