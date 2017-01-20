@@ -8,7 +8,10 @@ else
 	exit 1
 fi
 
-if [ ! mount -o nofail,noatime,nodiratime,nobarrier /dev/xvdd1 /dbstore ]; then
+mkdir /dbstore
+
+if ! mount -o nofail,noatime,nodiratime,nobarrier /dev/xvdd1 /dbstore  
+then
 	echo "ERROR: Could not mount /dbstore partition (/dev/xvdd1)"
 	exit 1
 fi
