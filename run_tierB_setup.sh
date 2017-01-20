@@ -17,12 +17,16 @@ git config --global alias.dump 'cat-file -p'
 git clone https://github.com/charlesfg/TPCx-V_setup.git
 cd TPCx-V_setup
 
-bash format_dbstore.sh
-bash setup_dbstore_folders.sh
-bash setup_postgres.sh
-su postgres -c "bash -x create_database.sh"
-su postgres -c "bash -x backup_db.sh"
-su postgres -c "bash restore_db.sh"
+bash -x format_dbstore.sh 2>&1 | tee format_dbstore_$(hostname)_$(date +%Y-%m-%d_%H%M).log
+bash -x setup_dbstore_folders.sh 2>&1 | tee setup_dbstore_folders_$(hostname)_$(date +%Y-%m-%d_%H%M).log
+bash -x setup_postgres.sh 2>&1 | tee setup_postgres_$(hostname)_$(date +%Y-%m-%d_%H%M).log
+
+su postgres -c "bash -x create_database.sh" 2>&1 | tee create_database_$(hostname)_$(date +%Y-%m-%d_%H%M).log
+
+su postgres -c "bash -x backup_db.sh" 2>&1 | tee backup_db_$(hostname)_$(date +%Y-%m-%d_%H%M).log
+
+su postgres -c "bash -x restore_db.sh" 2>&1 | tee restore__$(hostname)_$(date +%Y-%m-%d_%H%M).log
+
 
 cat <<EOF
 ---------------------------------------------------------------
