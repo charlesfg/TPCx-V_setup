@@ -21,7 +21,8 @@ bash format_dbstore.sh
 bash setup_dbstore_folders.sh
 bash setup_postgres.sh
 bash create_database.sh
-
+bash backup_db.sh
+bash restore_db.sh
 
 cat <<EOF
 ---------------------------------------------------------------

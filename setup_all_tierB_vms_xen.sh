@@ -19,17 +19,16 @@ IP_ADDR[tpc-g4b2]=10.0.0.42
 
 for i in `seq 1 4`; do
 	for j in 1 2; do
-		# if [[ $i -eq 1 && $j -eq 1 ]]; then
-		# 	continue;
-		# fi
+		if [[ $i -eq 1 && $j -eq 1 ]]; then
+			continue;
+		fi
 		# if [[ $i -eq 1 && $j -eq 2 ]]; then
 		# 	continue;
 		# fi
 		L=tpc-g${i}b${j}		
 		echo ":: Setup the $L VM .... "
 		scp  run_tierB_setup.sh ${L}:~
-		ssh ${L} bash run_tierB_setup.sh
-		exit 0
+		ssh ${L} bash run_tierB_setup.sh		
 	done
 done
 
