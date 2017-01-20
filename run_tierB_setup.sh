@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -o errexit
+#set -o errexit
 
 
 git config --global user.email "charles.fg@gmail.com"
@@ -20,7 +20,7 @@ cd TPCx-V_setup
 bash format_dbstore.sh
 bash setup_dbstore_folders.sh
 bash setup_postgres.sh
-su postgres -c "bash create_database.sh"
+su postgres -c "bash -x create_database.sh"
 su postgres -c "bash -x backup_db.sh"
 su postgres -c "bash restore_db.sh"
 
