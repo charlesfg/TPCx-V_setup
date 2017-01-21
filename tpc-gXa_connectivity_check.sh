@@ -8,7 +8,7 @@ do
     export PGHOST=$(hostname | sed "s/a/b$i/g")
     echo -e "+ Testing for host $PGHOST\n"
 
-    RES=$(su postgres -c 'psql tpcv -c "select count(*) from sector"' 2>&1 | grep 12 | tr -d '[:space:]')
+    RES=$(psql tpcv -c "select count(*) from sector" | grep 12 | tr -d '[:space:]')
     if [ $RES -ne 12 ]; then
         echo "connectivity check failed for $PGHOST .. RESULT = $RES" >&2
         exit 1
