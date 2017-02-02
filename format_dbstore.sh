@@ -16,4 +16,4 @@ then
 	exit 1
 fi
 
-echo "/dev/xvdd1\t/dbstore\text4\tnofail,noatime,nodiratime,nobarrier\t0\t1\n" >> /etc/fstab
+echo -e "/dev/xvdd1\t/dbstore\text4\tnofail,noatime,nodiratime,nobarrier\t0\t1\n" >> /etc/fstab

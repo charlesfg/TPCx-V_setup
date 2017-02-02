@@ -2,6 +2,7 @@
 
 cd 
 rm -fv /opt/VDb/pgsql/dml/test_programs/tradestatus
+rm -fv /opt/VDb/pgsql/dml/test_programs/traderesult
 
 for i in  1 2;
 do 
@@ -36,3 +37,9 @@ do
         #exit 1
     fi
 done
+
+
+sed -i.bkp '/SQL_C_UBIGINT/s/SQL_INTEGER/SQL_BIGINT/' traderesult.c    
+sed -i 's/DSN=PSQL[1-3]/DSN=PSQL3/g' traderesult.c
+./traderesult 2>&1| grep '^SQL '
+
