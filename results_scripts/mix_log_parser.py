@@ -26,6 +26,7 @@ class MixLogParser:
         self.security_detail = None
         self.market_feed = None
         self.market_watch = None
+        self.data_maintenance = None
         # Timestamp for the Run
         self.ts = None
         self.stats_to_collect = [
@@ -38,15 +39,41 @@ class MixLogParser:
             ("broker_volume", "Broker-Volume Transactions:"),
             ("security_detail", "Security-Detail Transactions:"),
             ("market_feed", "Market-Feed Transactions:"),
-            ("market_watch", "Market-Watch Transactions:")
+            ("market_watch", "Market-Watch Transactions:"),
+            ("data_maintenance", "Data-Maintenance Transactions:")
         ]
 
         self.parse(folder + os.sep + mfile)
         self.tpsV = [x/30.0 for x in self.trade_result]
-        self.samples = len(self.trade_result)
 
-    def get_x_axis(self, array):
-        return [x * 30 for x in xrange(1, len(array) + 1)]
+        # Maximum number of samples
+        self.samples = max(map(len, self.get_all_tx_dict().itervalues()))
+
+
+    def get_all_tx_dict(self):
+
+        d = {
+            "BV": self.broker_volume,
+            "CP": self.customer_position,
+            "DM": self.data_maintenance,
+            "MF": self.market_feed,
+            "MW": self.market_watch,
+            "SD": self.security_detail,
+            "TL": self.trade_lookup,
+            "TS": self.trade_status,
+            "TO": self.trade_order,
+            "TR": self.trade_result,
+            "TU": self.trade_update
+        }
+
+        return d
+
+    def get_x_axis(self, value):
+        if list == type(value):
+            size = len(value)
+        else:
+            size = value
+        return [x * 30 for x in xrange(1, size + 1)]
 
     def parse(self, mfile):
         with open(mfile) as f:
