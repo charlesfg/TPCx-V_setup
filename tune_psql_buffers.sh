@@ -34,8 +34,7 @@ sed -i 's/^checkpoint_seg.*/checkpoint_segments = ${SB[$i]}/g' /dbstore/tpcv-dat
 
 EOF
 
-
-ssh ${i} "systemctl start postgresql-9.3.service"
+ssh ${i} "systemctl restart postgresql-9.3.service"
 
 done
 
