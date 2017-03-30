@@ -30,7 +30,7 @@ do
 ssh postgres@${i} <<EOF
 sed -i 's/^shared_buffers.*/shared_buffers = ${SB[$i]}MB/g' /dbstore/tpcv-data/postgresql.conf
 
-sed -i 's/^#checkpoint_seg.*/checkpoint_segments = ${SB[$i]}/g' /dbstore/tpcv-data/postgresql.conf
+sed -i 's/^checkpoint_seg.*/checkpoint_segments = ${SB[$i]}/g' /dbstore/tpcv-data/postgresql.conf
 
 EOF
 
