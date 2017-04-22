@@ -43,7 +43,12 @@ class MixLogParser:
             ("data_maintenance", "Data-Maintenance Transactions:")
         ]
 
-        self.parse(folder + os.sep + mfile)
+        import os
+        for root, dirs, files in os.walk(folder):
+            for f in files:
+                if f == mfile:
+                    self.parse(root + os.sep + f)
+
         self.tpsV = [x/30.0 for x in self.trade_result]
 
         # Maximum number of samples
@@ -107,14 +112,4 @@ def get_trade_results():
 if __name__ == '__main__':
     folder = "/home/charles/Dropbox/Phd Portugal/oxum/31/results/20170124-171536"
     m = MixLogParser(folder)
-    print(m.x_axis)
-    print(len(m.x_axis))
-    print(m.trade_order)
-    print(len(m.trade_order))
-    print(len(m.trade_status))
-    print(m.trade_result)
-    print(len(m.trade_result))
-    print(m.all_transactions)
-    print(len(m.all_transactions))
-    print(m.all_transactions_count)
 

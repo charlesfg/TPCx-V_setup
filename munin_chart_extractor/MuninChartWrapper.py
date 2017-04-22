@@ -1,8 +1,15 @@
-from settings import chart_y, chart_x, host, chart_settings, user, passwd
+from settings import chart_y, chart_x, host, chart_settings, user, passwd, LOGGING
 
 import urllib3
 
 import argparse
+
+import logging, logging.config
+
+logging.config.dictConfig(LOGGING)
+
+logger = logging.getLogger('__main__')
+
 
 class MuninWrapper:
 
@@ -34,7 +41,12 @@ class MuninWrapper:
 
         for vm, plugins in chart_settings.iteritems():
             for plugin in plugins:
-                r = m.get_chart(vm, plugin)
+                try:
+                    r = m.get_chart(vm, plugin)
+                except Exception as e:
+                    logger.info("Error for vm={} and pluging={}\nskipping ...".format(vm, plugin))
+                    logger.error(e)
+                    continue
                 with open("{}/{}-{}.png".format(folder, prefix, plugin), 'w') as f:
                     f.write(r)
 
@@ -48,6 +60,8 @@ if __name__ == '__main__':
     parser.add_argument('-e', '--end-time', type=int, help='End time in epoch seconds', required=True)
 
     args = parser.parse_args()
+
+    logger.debug("Collecting Munin charts with timestamps s={} e={}".format(args.start_time, args.end_time))
 
     m = MuninWrapper(ts_start=args.start_time, ts_end=args.end_time)
     m.save_charts(args.prefix, args.folder)
