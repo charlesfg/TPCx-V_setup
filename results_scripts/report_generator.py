@@ -4,7 +4,7 @@ import shutil
 import re
 from bs4 import BeautifulSoup
 
-from settings import html_base, template_html
+from settings import html_base, template_html, site_base
 
 html_template_dir = os.path.dirname(os.path.abspath(__file__)) + os.sep + '../html_template'
 
@@ -79,7 +79,7 @@ def update_side_bar(runs):
 
     sb_html = ["<!--##RUN_LINK_START##-->"]
     for i in runs:
-        sb_html.append("<li><a href='{}/index.html'>{}</a></li>".format(html_base + os.sep + i,
+        sb_html.append("<li><a href='{}/index.html'>{}</a></li>".format(site_base + os.sep + i,
                                                                         i.upper().replace("_", " ")))
     # Close the wrap markup
     sb_html.append("<!--##RUN_LINK_END##-->")
