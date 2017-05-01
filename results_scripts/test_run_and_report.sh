@@ -1,7 +1,6 @@
 #!/bin/bash
 
-TS_START=`date +%s`
-
+TS_START=1492835256
 # run the  benchmark
 # To get the last ID
 # cat /opt/VDriver/results/RUNID
@@ -11,7 +10,8 @@ RUN_ID=31
 # /opt/VDriver/results/$(cat /opt/VDriver/results/RUNID)
 RUN_RESULTS_FOLDER="/home/charles/Dropbox/Phd Portugal/oxum/31"
 
-TS_END=`date +%s`
+TS_END=1492835596
+
 
 TS_START=$(($TS_END - 3600))
 

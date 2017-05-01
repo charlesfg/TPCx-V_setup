@@ -1,4 +1,8 @@
+import matplotlib
+matplotlib.use('Agg')
+
 from matplotlib import pyplot as plt
+
 
 
 def single_plot(x, y, x_label, y_label, ts, out_file=None, title=None):
