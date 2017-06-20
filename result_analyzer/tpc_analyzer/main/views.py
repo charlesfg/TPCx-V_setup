@@ -6,7 +6,7 @@ import os
 from django.shortcuts import render
 
 # Create your views here.
-from result_analyzer.tpc_analyzer.tpc_analyzer.settings import charts, results
+from tpc_analyzer.settings import charts, results
 
 from results_scripts.report_generator import list_runs, parse_run_info
 from results_scripts.settings import html_base
@@ -48,6 +48,7 @@ def get_run_url(rn):
 
 
 def index(request):
+    runs = get_runs_info()
     context= {"num_runs": len(runs)}
     return render(request, 'main/index.html', context)
 
