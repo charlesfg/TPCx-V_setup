@@ -92,7 +92,7 @@ def update_side_bar(runs):
     pass
 
 
-def generate_run_report(rn, tpsv, report_date):
+def generate_run_report(rn, tpsv, report_date, transaction_rate, transaction_mix ):
 
     # first create the run report
     run_report_dir = html_base + os.sep + "run_" + rn
@@ -135,6 +135,34 @@ def generate_run_report(rn, tpsv, report_date):
     pass
 
 
+def parse_run_info(rf):
+
+    if rf.endswith('/'):
+        rf = rf.rstrip('/')
+
+    # Run number
+    rn = os.path.basename(rf)
+
+    run_tpc_report = rf + os.sep + 'Executive Summary Report.html'
+    try:
+        html_doc = open(run_tpc_report)
+    except IOError:
+        return None
+    soup = BeautifulSoup(html_doc, 'html.parser')
+    t = soup.find_all('table')
+
+    run_info = {
+        "rn" : rn ,
+        "transaction_rate" : t[7],
+        "transaction_mix" : t[8],
+        "total_tx" : t[9].text.split('\n')[2][18:],
+        "run_time" : t[9].text.split('\n')[5][20:],
+        "tpsv" : t[4].text.split('\n')[-6][4:],
+        "report_date" : t[0].text.split('\n')[8]
+    }
+    return run_info
+
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Generate the html report on place configured on settings.'
@@ -150,27 +178,15 @@ if __name__ == '__main__':
 
     # Run folder
     rf = args.run_folder
-    if rf.endswith('/'):
-        rf = rf.rstrip('/')
 
-    # Run number
-    rn = os.path.basename(rf)
+    run_info = parse_run_info(rf)
+    rn = run_info["rn"]
+    tpsv = run_info["tpsv"]
+    report_date = run_info["report_date"]
+    transaction_rate = run_info["transaction_rate"]
+    transaction_mix = run_info["transaction_mix"]
 
-    run_tpc_report = rf + os.sep + 'Executive Summary Report.html'
-    html_doc = open(run_tpc_report)
-    soup = BeautifulSoup(html_doc, 'html.parser')
-    t = soup.find_all('table')
-
-    # Report Date
-    report_date = t[0].text.split('\n')[8]
-
-    # tpvsV  -- form: u'tpsV4,48'
-    tpsv = t[4].text.split('\n')[-6][4:]
-
-    transaction_rate = t[7]
-    transaction_mix = t[8]
-
-    generate_run_report(rn, tpsv, report_date)
+    generate_run_report(rn, tpsv, report_date, transaction_rate, transaction_mix)
 
     # update the global index  table of runs
     update_global_index(rn, tpsv, report_date)
