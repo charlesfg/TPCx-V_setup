@@ -1,5 +1,5 @@
 # Script to run outsite the tpc-drive
-for j in `seq 1 5`; do
+for j in `seq 1 15`; do
     for i in `ls /opt/VDriver/run_configs/vcfg*`;
     do 
     	cp -v $i /opt/VDriver/jar/vcfg.properties

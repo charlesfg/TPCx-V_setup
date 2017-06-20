@@ -1,13 +1,16 @@
 #!/bin/bash
+echo == Runing with $1
+
+
 
 # ensure that the VDriver remote dir is mounted
 ./ensure_mounted_runs_dir.sh
 
 TS_START=`date +%s`
 
-# Start the load on the tpc-tenant performing a cleaning before
+# Start the load on the tpc-tenant
 ssh tpc-tenant screen -d -m ./kill_background_work.sh
-ssh tpc-tenant screen -d -m ./run_background_work.sh
+ssh tpc-tenant screen -d -m ./run_background_work_v${1}
 
 # run the  benchmark
 ssh postgres@tpc-drive "cd /opt/runs && bash run.sh"
