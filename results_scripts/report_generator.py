@@ -10,9 +10,8 @@ html_template_dir = os.path.dirname(os.path.abspath(__file__)) + os.sep + '../ht
 
 def check_setup():
     """
-    List the runs that already exist on the site
-    Also check if the site was not configured and setup it there
-    :return:  List of runs that resides in the site
+    check if the site was not configured and setup it there
+
     """
 
     # check if the initial setup is already done
@@ -37,7 +36,7 @@ def list_runs():
     dirs = filter(os.path.isdir, [html_base + os.sep + x for x in os.listdir(html_base)])
     runs = [os.path.basename(x) for x in filter(lambda x: os.path.basename(x).startswith('run_'), dirs)]
 
-    runs.sort()
+    runs.sort().reverse()
 
     return runs
 
