@@ -5,14 +5,19 @@ from matplotlib import pyplot as plt
 
 
 
-def single_plot(x, y, x_label, y_label, ts, out_file=None, title=None):
+def single_plot(x, y, x_label, y_label, y_max, ts, out_file=None, title=None, vlines=None):
 
     plt.figure(figsize=(8, 4), dpi=360)
     line, = plt.plot(x, y)
     plt.setp(line, color='g', linewidth=0.7, marker='+', ms=3)
     plt.ylabel(y_label)
+    plt.ylim(ymax=y_max)
     plt.xlabel(x_label)
     plt.grid(True)
+
+    if vlines and len(vlines) > 0:
+        for x in vlines:
+            plt.axvline(x=x, linewidth=0.7, linestyle=':', color='black')
 
     if title:
         plt.title(title)
@@ -24,7 +29,8 @@ def single_plot(x, y, x_label, y_label, ts, out_file=None, title=None):
     else:
         plt.show()
 
-def multi_plot(y_dict,  x_label, y_label, ts, out_file=None, title=None):
+def multi_plot(y_dict,  x_label, y_label, y_max, ts, out_file=None, title=None,
+               vlines=None):
     """
     :param x:
     :param y_dict: with spec =  'str(label): array(values)'
@@ -42,8 +48,13 @@ def multi_plot(y_dict,  x_label, y_label, ts, out_file=None, title=None):
         plt.plot([x * 30 for x in xrange(1, len(v) + 1)], v, linewidth=0.7, ms=3, label=k)
 
     plt.ylabel(y_label)
+    plt.ylim(ymax=y_max)
     plt.xlabel(x_label)
     plt.grid(True)
+
+    if vlines and len(vlines) > 0:
+        for x in vlines:
+            plt.axvline(x=x, linewidth=0.7, linestyle=':', color='black')
 
     if title:
         plt.title(title)

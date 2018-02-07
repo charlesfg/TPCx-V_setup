@@ -2,6 +2,7 @@ import argparse
 import os
 import shutil
 import re
+import time
 from bs4 import BeautifulSoup
 
 from settings import html_base, template_html, site_base
@@ -42,15 +43,24 @@ def list_runs():
     return runs
 
 
-def update_global_index(rn, tpsv, report_date):
+def update_global_index(rn, tpsv, report_date, alias):
 
     index = html_base + os.sep + 'index.html'
     content = read_file_at_once(index)
 
+    if alias:
+        r_name = "{} - {}".format(rn, alias)
+    else:
+        r_name = rn
+
+    run_ref = "<a href='{}/run_{}/index.html'>{}</a>".format(site_base, rn, r_name)
+
     s = re.search("(\d+)##RUN_COUNT", content, re.DOTALL | re.MULTILINE)
     count = int(s.group(1)) + 1
     line = "<tr><th scope=\"row\">{}</th><td>{}</td><td>{}</td><td>{}</td></tr>\n<!--{}##RUN_COUNT-->"
-    content = re.sub("<!--\d+##RUN_COUNT-->", line.format(count, rn, tpsv, report_date, count), content)
+    content = re.sub("<!--\d+##RUN_COUNT-->", line.format(count, run_ref,  tpsv, report_date, count), content)
+
+
 
     write_to_file(index, content)
     pass
@@ -92,10 +102,13 @@ def update_side_bar(runs):
     pass
 
 
-def generate_run_report(rn, tpsv, report_date, transaction_rate, transaction_mix ):
+def generate_run_report(rn, tpsv, report_date, transaction_rate, transaction_mix, alias, test_time, measuremnt_time):
 
     # first create the run report
     run_report_dir = html_base + os.sep + "run_" + rn
+
+    if not alias:
+        alias = '-'
 
     if os.path.exists(run_report_dir):
         shutil.rmtree(run_report_dir)
@@ -106,6 +119,9 @@ def generate_run_report(rn, tpsv, report_date, transaction_rate, transaction_mix
     template_content = re.sub("##RUN##", "Run {}".format(rn), template_content)
     template_content = re.sub("##RUN_DATE##", report_date, template_content)
     template_content = re.sub("##RUN_TPSV##", tpsv, template_content)
+    template_content = re.sub("##ALIAS##", alias, template_content)
+    template_content = re.sub("##TEST_TIME##", test_time, template_content)
+    template_content = re.sub("##TOTAL_TIME##", measuremnt_time, template_content)
     template_content = re.sub("##RUN_TRANSACTION_RT##", str(transaction_rate), template_content)
     template_content = re.sub("##RUN_TRANSACTION_MIX##", str(transaction_mix), template_content)
 
@@ -171,10 +187,32 @@ if __name__ == '__main__':
                                                              'Named by the integer that identifies it!', required=True)
     parser.add_argument('-f', '--folder', type=str, help='The folder where lives the chart images for the run. ',
                         required=True)
+
+    parser.add_argument('-s', '--start-test', type=int, help='Start time (in seconds) of the parallel test load ',
+                        required=False)
+
+    parser.add_argument('-e', '--end-test', type=int, help='End time (in seconds) of the parallel test load ',
+                        required=False)
+
+    parser.add_argument('-a', '--alias', type=str, help='Meaningful alias for the test',
+                        required=False)
+
     args = parser.parse_args()
 
     # Check if web site is ok
     check_setup()
+
+    alias = start_t = end_t = None
+
+    if args.alias :
+        alias = args.alias
+
+    if args.start_test and args.start_test > 0:
+        start_t = args.start_test
+
+    if args.end_test and args.end_test > 0:
+        end_t = args.end_test
+
 
     # Run folder
     rf = args.run_folder
@@ -185,11 +223,17 @@ if __name__ == '__main__':
     report_date = run_info["report_date"]
     transaction_rate = run_info["transaction_rate"]
     transaction_mix = run_info["transaction_mix"]
+    measuremnt_time = run_info["run_time"]
 
-    generate_run_report(rn, tpsv, report_date, transaction_rate, transaction_mix)
+    if start_t and end_t and end_t > start_t:
+        test_time = time.strftime('%H:%M:%S', time.gmtime(end_t - start_t))
+    else:
+        test_time = '-'
+
+    generate_run_report(rn, tpsv, report_date, transaction_rate, transaction_mix, alias, test_time, measuremnt_time)
 
     # update the global index  table of runs
-    update_global_index(rn, tpsv, report_date)
+    update_global_index(rn, tpsv, report_date, alias)
 
     # Replace the Runs on side bar
     runs = list_runs()

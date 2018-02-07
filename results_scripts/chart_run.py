@@ -11,6 +11,12 @@ if __name__ == '__main__':
                                                              'Named by the integer that identifies it!', required=True)
     parser.add_argument('-f', '--folder', type=str, help='Folder to store the chart files', required=True)
 
+    parser.add_argument('-s', '--start-test', type=int, help='Start time (in seconds) of the parallel test load ',
+                        required=False)
+
+    parser.add_argument('-e', '--end-test', type=int, help='End time (in seconds) of the parallel test load ',
+                        required=False)
+
     args = parser.parse_args()
 
     # Run folder
@@ -26,25 +32,39 @@ if __name__ == '__main__':
     m = MixLogParser(rf)
     # Run timestamp
     rts = m.ts
+    start_t = end_t = None
+
+    if args.start_test and args.start_test > 0:
+        start_t = args.start_test
+
+    if args.end_test and args.end_test > 0:
+        end_t = args.end_test
+
 
     f_prefix_name = "run_{}_{}_{}"
     file_name = cf + os.sep + f_prefix_name
 
     y = m.tpsV
     x = m.get_x_axis(y)
-    single_plot(x, y, 'Elapsed Time (seconds)', 'tpsV', rts,
-                file_name.format(rn, rts, 'tpsV'), "Run {}".format(rn))
+    if start_t and end_t:
+        vlines = [start_t, end_t]
+    else:
+        vlines = None
+
+    single_plot(x, y, 'Elapsed Time (seconds)', 'tpsV', 14,  rts,
+                file_name.format(rn, rts, 'tpsV'), "Run {}".format(rn),
+                vlines)
 
     y = m.all_transactions
     x = m.get_x_axis(y)
 
-    single_plot(x, y, 'Elapsed Time (seconds)', 'Overall Transactions', rts,
-                file_name.format(rn, rts, 'tps'), "Run {}".format(rn))
+    single_plot(x, y, 'Elapsed Time (seconds)', 'Overall Transactions', 4000,  rts,
+                file_name.format(rn, rts, 'tps'), "Run {}".format(rn), vlines)
 
     d = m.get_all_tx_dict()
 
-    multi_plot(d, "Elapsed Seconds", "Transactions", rts,
-               file_name.format(rn, rts, 'tps_all'), "Run {}".format(rn))
+    multi_plot(d, "Elapsed Seconds", "Transactions", 700,  rts,
+               file_name.format(rn, rts, 'tps_all'), "Run {}".format(rn), vlines)
 
 
 

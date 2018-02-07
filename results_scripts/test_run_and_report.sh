@@ -19,10 +19,10 @@ TS_START=$(($TS_END - 3600))
 IMG_FOLDER=/tmp/img_tmp_${RUN_ID}
 mkdir ${IMG_FOLDER}
 
-cd ../munin_chart_extractor
-python MuninChartWrapper.py -p system_run_${RUN_ID} -f ${IMG_FOLDER} -s ${TS_START} -e ${TS_END}
-cd -
+#cd ../munin_chart_extractor
+#python MuninChartWrapper.py -p system_run_${RUN_ID} -f ${IMG_FOLDER} -s ${TS_START} -e ${TS_END}
+#cd -
 
-python chart_run.py -r "${RUN_RESULTS_FOLDER}" -f ${IMG_FOLDER}
+python chart_run.py -r "${RUN_RESULTS_FOLDER}" -f ${IMG_FOLDER} -s 1500 -e 4500
 
-python report_generator.py -r "${RUN_RESULTS_FOLDER}" -f ${IMG_FOLDER}
+python report_generator.py -r "${RUN_RESULTS_FOLDER}" -f ${IMG_FOLDER} -s 1500 -e 4500 -a "alias f  g"

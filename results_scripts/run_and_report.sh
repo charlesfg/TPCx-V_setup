@@ -33,6 +33,4 @@ python chart_run.py -r "${RUN_RESULTS_FOLDER}" -f ${IMG_FOLDER}
 
 python report_generator.py -r "${RUN_RESULTS_FOLDER}" -f ${IMG_FOLDER}
 
-
 echo  "done...."
-
