@@ -36,7 +36,8 @@ def list_runs():
     dirs = filter(os.path.isdir, [html_base + os.sep + x for x in os.listdir(html_base)])
     runs = [os.path.basename(x) for x in filter(lambda x: os.path.basename(x).startswith('run_'), dirs)]
 
-    runs.sort().reverse()
+    runs.sort()
+    runs.reverse()
 
     return runs
 
