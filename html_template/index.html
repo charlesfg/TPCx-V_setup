@@ -17,6 +17,9 @@
     <!-- Custom CSS -->
     <link href="css/simple-sidebar.css" rel="stylesheet">
     <link href="css/scrolling-nav.css" rel="stylesheet">
+    <link href="css/jquery.dataTables.min.css" rel="stylesheet">
+
+
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -76,7 +79,7 @@
         <div id="page-content-wrapper">
             <div id="first-div" class="container-fluid">
                 <div class="row">
-                    <table class="table table-hover">
+                    <table id="runs" class="display table table-hover">
                         <thead>
                         <tr>
                             <th>#</th>
@@ -109,6 +112,7 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
     <script src="js/scrolling-nav.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
 
     <!-- Menu Toggle Script -->
     <script>
@@ -116,6 +120,17 @@
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
     });
+    $(document).ready(function() {
+    $('#runs').DataTable( {
+        columnDefs: [ {
+            targets: [ 0 ],
+            orderData: [ 0, 1 ]
+        }, {
+            targets: [ 1 ],
+            orderData: [ 1, 0 ]
+        }, ]
+    } );
+} );
     </script>
 
 </body>

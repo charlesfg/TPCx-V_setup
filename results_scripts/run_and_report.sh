@@ -1,5 +1,15 @@
 #!/bin/bash
 
+EXTRA_PARAM=""
+if [ -z "$1" ]
+then
+    echo "No alias provided"
+else
+    echo "Using $1 as alias"
+    EXTRA_PARAM="$EXTRA_PARAM -a $1"
+fi
+
+sleep 1
 
 # Usage :
 # $1 ->target filter
@@ -72,7 +82,7 @@ cd -
 
 python chart_run.py -r "${RUN_RESULTS_FOLDER}" -f ${IMG_FOLDER}
 
-python report_generator.py -r "${RUN_RESULTS_FOLDER}" -f ${IMG_FOLDER}
+python report_generator.py -r "${RUN_RESULTS_FOLDER}" -f ${IMG_FOLDER} "$EXTRA_PARAM"
 
 
 echo  "done...."
