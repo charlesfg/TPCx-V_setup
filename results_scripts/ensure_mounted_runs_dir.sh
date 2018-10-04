@@ -1,3 +1,4 @@
+#!/bin/bash 
 if test $(ls /opt/VDriver/ | wc -l) == 0;
 then
 	echo "Mounting ...."

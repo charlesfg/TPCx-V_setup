@@ -122,14 +122,9 @@
     });
     $(document).ready(function() {
     $('#runs').DataTable( {
-        columnDefs: [ {
-            targets: [ 0 ],
-            orderData: [ 0, 1 ]
-        }, {
-            targets: [ 1 ],
-            orderData: [ 1, 0 ]
-        }, ]
+        "order": [[ 0, "desc" ]]
     } );
+
 } );
     </script>
 
