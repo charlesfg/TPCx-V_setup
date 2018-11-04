@@ -38,12 +38,15 @@ alias runatb="runAt tpc-g[0-9]b"
 
 # clean all caches
 runAt tpc-g bash ~/clean_caches.sh
+runAt tpc-g 'test -e /dbstore/backup && rm -rf /dbstore/backup/*'
+runAt tpc-g 'test -e /dbstore/tpcv-data/pg_log && rm -rf /dbstore/tpcv-data/pg_log/*'
 
+ssh tpc-driver 'cd /opt/runs && bash -x kill_run.sh'
 
 # ensure that the VDriver remote dir is mounted
 ./ensure_mounted_runs_dir.sh
 
 
 # Start the load on the tpc-tenant performing a cleaning before
-ssh tpc-tenant screen -d -m ./kill_background_work.sh
-ssh tpc-tenant screen -d -m ./run_background_work.sh
+#ssh tpc-tenant screen -d -m ./kill_background_work.sh
+#ssh tpc-tenant screen -d -m ./run_background_work.sh
