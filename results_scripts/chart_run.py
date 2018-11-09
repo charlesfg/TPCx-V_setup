@@ -51,14 +51,14 @@ if __name__ == '__main__':
     else:
         vlines = None
 
-    single_plot(x, y, 'Elapsed Time (seconds)', 'tpsV', 14,  rts,
+    single_plot(x, y, 'Elapsed Time (seconds)', 'tpsV', 18,  rts,
                 file_name.format(rn, rts, 'tpsV'), "Run {}".format(rn),
                 vlines)
 
     y = m.all_transactions
     x = m.get_x_axis(y)
 
-    single_plot(x, y, 'Elapsed Time (seconds)', 'Overall Transactions', 4000,  rts,
+    single_plot(x, y, 'Elapsed Time (seconds)', 'Overall Transactions', 4500,  rts,
                 file_name.format(rn, rts, 'tps'), "Run {}".format(rn), vlines)
 
     d = m.get_all_tx_dict()

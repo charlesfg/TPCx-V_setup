@@ -35,18 +35,25 @@ alias runatall="runAt tpc-g"
 alias runata="runAt tpc-g[0-9]a"
 alias runatb="runAt tpc-g[0-9]b"
 
+SECONDS=0
 
 # clean all caches
-runAt tpc-g bash ~/clean_caches.sh
-runAt tpc-g 'test -e /dbstore/backup && rm -rf /dbstore/backup/*'
-runAt tpc-g 'test -e /dbstore/tpcv-data/pg_log && rm -rf /dbstore/tpcv-data/pg_log/*'
-
-ssh tpc-driver 'cd /opt/runs && bash -x kill_run.sh'
+copyTo tpc-g ~ clean_caches.sh
 
 # ensure that the VDriver remote dir is mounted
 ./ensure_mounted_runs_dir.sh
 
-
 # Start the load on the tpc-tenant performing a cleaning before
 #ssh tpc-tenant screen -d -m ./kill_background_work.sh
 #ssh tpc-tenant screen -d -m ./run_background_work.sh
+
+runAt tpc-g 'bash ~/clean_caches.sh'
+runAt tpc-g 'test -e /dbstore/backup && rm -rf /dbstore/backup/*'
+runAt tpc-g 'test -e /dbstore/tpcv-data/pg_log && rm -rf /dbstore/tpcv-data/pg_log/*'
+runAt tpc-g 'psql -U tpcv -c VACUUM'
+
+ssh tpc-driver 'cd /opt/runs && bash -x kill_run.sh'
+
+# do some work
+duration=$SECONDS
+echo "$(($duration / 60)):$(($duration % 60)) $((hostname))" 
