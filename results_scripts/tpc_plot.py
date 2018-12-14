@@ -3,9 +3,25 @@ matplotlib.use('Agg')
 
 from matplotlib import pyplot as plt
 
+vlines_limits = [0, 8340]
+vlines_ramp = [120]
+vlines_phases = [840, 1560, 2280, 3000, 3720, 4440, 5160, 5880, 6600, 7320, 8040]
+
+def grid_chart(plt,default_cfg):
+
+    if default_cfg:
+        plt.grid(False)
+        for x in vlines_limits:
+            plt.axvline(x=x, linewidth=0.3, linestyle='-', color='red')
+        for x in vlines_ramp:
+            plt.axvline(x=x, linewidth=0.4, linestyle='-', color='gray')
+        for x in vlines_phases:
+            plt.axvline(x=x, linewidth=0.5, linestyle='-', color='black')
+    else:
+        plt.grid(True)
 
 
-def single_plot(x, y, x_label, y_label, y_max, ts, out_file=None, title=None, vlines=None):
+def single_plot(x, y, x_label, y_label, y_max, ts, out_file=None, title=None, vlines=None, default_cfg=True):
 
     plt.figure(figsize=(8, 4), dpi=360)
     line, = plt.plot(x, y)
@@ -13,7 +29,8 @@ def single_plot(x, y, x_label, y_label, y_max, ts, out_file=None, title=None, vl
     plt.ylabel(y_label)
     plt.ylim(ymax=y_max)
     plt.xlabel(x_label)
-    plt.grid(True)
+
+    grid_chart(plt, default_cfg)
 
     if vlines and len(vlines) > 0:
         for x in vlines:
@@ -30,7 +47,7 @@ def single_plot(x, y, x_label, y_label, y_max, ts, out_file=None, title=None, vl
         plt.show()
 
 def multi_plot(y_dict,  x_label, y_label, y_max, ts, out_file=None, title=None,
-               vlines=None):
+               vlines=None, default_cfg=True):
     """
     :param x:
     :param y_dict: with spec =  'str(label): array(values)'
@@ -50,7 +67,7 @@ def multi_plot(y_dict,  x_label, y_label, y_max, ts, out_file=None, title=None,
     plt.ylabel(y_label)
     plt.ylim(ymax=y_max)
     plt.xlabel(x_label)
-    plt.grid(True)
+    grid_chart(plt, default_cfg)
 
     if vlines and len(vlines) > 0:
         for x in vlines:
