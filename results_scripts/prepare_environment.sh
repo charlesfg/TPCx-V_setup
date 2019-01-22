@@ -72,6 +72,23 @@ do
     ssh $i screen -d -m ./run_background_work.sh
 done
 
+
+# Start Network Monitor
+./start_iperf.sh
+
+# To get the last ID
+RUN_ID_F=/opt/VDriver/results/RUNID
+
+if test -f ${RUN_ID_F}; then
+    RUN_ID=`cat  ${RUN_ID_F}`
+else
+    RUN_ID=0
+fi
+RUN_ID=`expr $RUN_ID + 1`
+
+scp start_iperf_collect.sh tpc-driver:~
+ssh tpc-driver screen -d -m ./start_iperf_collection.sh $RUN_ID
+
 #ssh tpc-tenant2 screen -d -m ./kill_background_work.sh
 #ssh tpc-tenant3 screen -d -m ./kill_background_work.sh
 # 
