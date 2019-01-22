@@ -11,6 +11,8 @@ def grid_chart(plt,default_cfg):
 
     if default_cfg:
         plt.grid(False)
+        plt.grid(True, axis='y', which="major", color='gray', linestyle=':', linewidth=0.3)
+        plt.grid(True, axis='y', which="minor", color='gray', linestyle=':', linewidth=0.2)
         for x in vlines_limits:
             plt.axvline(x=x, linewidth=0.3, linestyle='-', color='red')
         for x in vlines_ramp:
