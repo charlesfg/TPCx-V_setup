@@ -57,6 +57,7 @@ runAt tpc-g 'test -e /dbstore/tpcv-data/pg_log && rm -rf /dbstore/tpcv-data/pg_l
 # Restore the database database
 #copyTo tpc-g.b ~ restore_db.sh
 #runAt tpc-g.b 'bash restore_db.sh'
+./check_dbs_connectivity.sh
 
 ssh tpc-driver 'cd /opt/runs && bash -x kill_run.sh'
 
@@ -86,7 +87,7 @@ else
 fi
 RUN_ID=`expr $RUN_ID + 1`
 
-scp start_iperf_collect.sh tpc-driver:~
+scp start_iperf_collection.sh tpc-driver:~
 ssh tpc-driver screen -d -m ./start_iperf_collection.sh $RUN_ID
 
 #ssh tpc-tenant2 screen -d -m ./kill_background_work.sh

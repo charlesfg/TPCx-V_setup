@@ -1,5 +1,5 @@
-IPERF_DIR=/home/charles/Downloads/iperf-master/src
-#IPERF_DIR=/var/tpcv/iperf-master/src
+#IPERF_DIR=/home/charles/Downloads/iperf-master/src
+IPERF_DIR=/var/tpcv/iperf-master/src
 
 #ensure that are not running
 pgrep iperf
