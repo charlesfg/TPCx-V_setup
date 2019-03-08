@@ -7,8 +7,6 @@ set -o errexit
 VM=$1
 
 echo "Setting up the vm $VM ..."
-exit 1;
-
 
 declare -A IP_ADDR  # Create an associative array
 
@@ -25,21 +23,24 @@ IP_ADDR[tpc-g4a]=10.0.0.40
 IP_ADDR[tpc-g4b1]=10.0.0.41
 IP_ADDR[tpc-g4b2]=10.0.0.42
 
-
 echo "Cloning the tpc-${VM}";
 
 test -e /dev/oxum-vg/tpc-${VM}-v2-disk || lvcreate -L10G -n tpc-${VM}-v2-disk oxum-vg
 dd if=/dev/oxum-vg/tpc0-centos7-disk of=/dev/oxum-vg/tpc-${VM}-v2-disk bs=512K
 
+set +o errexit
 # add the extending disk commands    
 (echo d; echo n; echo p; echo 1; echo ; echo; echo w) | fdisk /dev/oxum-vg/tpc-${VM}-v2-disk
+set -o errexit
 
 test -e /dev/oxum-vg/tpc-${VM}-v2-swap ||lvcreate -L4G -n tpc-${VM}-v2-swap oxum-vg
 dd if=/dev/oxum-vg/tpc0-centos7-swap of=/dev/oxum-vg/tpc-${VM}-v2-swap bs=512K
 
+set +o errexit
 partprobe
 kpartx -al /dev/oxum-vg/tpc-${VM}-v2-disk
 kpartx -al /dev/oxum-vg/tpc-${VM}-v2-swap
+set -o errexit
 
 mount /dev/mapper/oxum--vg-tpc--${VM}--v2--disk1 /mnt/tpc-clone
 cd /mnt/tpc-clone
@@ -72,5 +73,6 @@ then
 fi
 
 xl -vvv create tpc-${VM}-v2-centos7.cfg
+sleep 25
 ssh tpc-${VM} resize2fs /dev/xvda1
 

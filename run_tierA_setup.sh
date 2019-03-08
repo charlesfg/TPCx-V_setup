@@ -14,6 +14,7 @@ git config --global alias.hist 'log --pretty=format:"%h %ad | %s%d [%an]" --grap
 git config --global alias.type 'cat-file -t'
 git config --global alias.dump 'cat-file -p'
 
+cd /tmp
 git clone https://github.com/charlesfg/TPCx-V_setup.git
 cd TPCx-V_setup
 

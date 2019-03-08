@@ -20,26 +20,17 @@ done
 
 cd /opt/VDb/pgsql/dml/test_programs
 
-# This is needed because the Makefile has a multiline invalid comment
-sed  -i.bkp '1,33d' Makefile
-
-# This is needed because there's a bug into the tradestatus program
-# In the SQLBindParameter calls, we are passing a SQL_C_UBIGINT into a SQL_INTEGER
-# Changing to a BIG_INT
-sed  -i.bkp 's/SQL_INTEGER/SQL_BIGINT/' tradestatus.c
 make tradestatus
 
 for i in  2 3;
 do
     RES=$(./tradestatus PSQL${i} | wc -l)
-    if [ $RES -ne 672 ]; then
+    if [ $RES -ne 22 ]; then
         echo "Connectivity check usng odbc failed for PSQL${i} .. RESULT = $RES" >&2
         #exit 1
     fi
 done
 
 
-sed -i.bkp '/SQL_C_UBIGINT/s/SQL_INTEGER/SQL_BIGINT/' traderesult.c    
-sed -i 's/DSN=PSQL[1-3]/DSN=PSQL3/g' traderesult.c
 ./traderesult 2>&1| grep '^SQL '
 
