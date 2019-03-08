@@ -24,9 +24,9 @@ bash -x setup_postgres.sh 2>&1 | tee setup_postgres_$(hostname)_$(date +%Y-%m-%d
 
 su postgres -c "bash -x create_database.sh" 2>&1 | tee create_database_$(hostname)_$(date +%Y-%m-%d_%H%M).log
 
-su postgres -c "bash -x backup_db.sh" 2>&1 | tee backup_db_$(hostname)_$(date +%Y-%m-%d_%H%M).log
+#su postgres -c "bash -x backup_db.sh" 2>&1 | tee backup_db_$(hostname)_$(date +%Y-%m-%d_%H%M).log
 
-su postgres -c "bash -x restore_db.sh" 2>&1 | tee restore__$(hostname)_$(date +%Y-%m-%d_%H%M).log
+#su postgres -c "bash -x restore_db.sh" 2>&1 | tee restore__$(hostname)_$(date +%Y-%m-%d_%H%M).log
 
 
 cat <<EOF
