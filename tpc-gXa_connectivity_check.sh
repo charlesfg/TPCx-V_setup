@@ -25,7 +25,7 @@ make tradestatus
 for i in  2 3;
 do
     RES=$(./tradestatus PSQL${i} | wc -l)
-    if [ $RES -ne 22 ]; then
+    if [ $RES -ne 672 ]; then
         echo "Connectivity check usng odbc failed for PSQL${i} .. RESULT = $RES" >&2
         #exit 1
     fi
