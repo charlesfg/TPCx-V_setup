@@ -53,7 +53,7 @@ if [[ ${VM} == g[[:digit:]]b* ]];
 then 
     echo "Adding the dbstore space for the database VMs"
     mkdir dbstore
-    echo "/dev/xvdd1\t/dbstore\text4\tnofail,noatime,nodiratime,nobarrier\t0\t1\n" >> etc/fstab      
+    echo -e "/dev/xvdd1\t/dbstore\text4\tnofail,noatime,nodiratime,nobarrier\t0\t1\n" >> etc/fstab      
 fi
 cd -
 umount /mnt/tpc-clone
