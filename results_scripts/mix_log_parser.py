@@ -49,7 +49,7 @@ class MixLogParser:
                 if f == mfile:
                     self.parse(root + os.sep + f)
 
-        self.tpsV = [x/30.0 for x in self.trade_result]
+        self.tpsV = [x/60.0 for x in self.trade_result]
 
         # Maximum number of samples
         self.samples = max(map(len, self.get_all_tx_dict().itervalues()))
@@ -78,7 +78,7 @@ class MixLogParser:
             size = len(value)
         else:
             size = value
-        return [x * 30 for x in xrange(1, size + 1)]
+        return [x * 60 for x in xrange(1, size + 1)]
 
     def parse(self, mfile):
         with open(mfile) as f:

@@ -7,7 +7,7 @@ RUN=$1
 # interval of collection
 SECONDS=10
 # default time im minutes to collect
-LENGTH=125;
+LENGTH=200;
 
 [ "$2" ] && { LENGTH=$2; }
 

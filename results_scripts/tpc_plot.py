@@ -64,7 +64,7 @@ def multi_plot(y_dict,  x_label, y_label, y_max, ts, out_file=None, title=None,
     ax = plt.subplot(111)
 
     for k, v in y_dict.iteritems():
-        plt.plot([x * 30 for x in xrange(1, len(v) + 1)], v, linewidth=0.7, ms=3, label=k)
+        plt.plot([x * 60 for x in xrange(1, len(v) + 1)], v, linewidth=0.7, ms=3, label=k)
 
     plt.ylabel(y_label)
     plt.ylim(ymax=y_max)
