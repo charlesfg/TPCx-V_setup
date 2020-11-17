@@ -4,11 +4,19 @@
 
 source ./common_functions.sh
 
-# copy script to all hosts
-copyTo tpc- ~ collect_stats.sh
-cp collect_stats.sh ~
+log "Start  stats data collection process"
+{
+    echo  "Copying files to hosts"
+    # copy script to all hosts
+    copyTo tpc-g ~ collect_stats.sh
+    copyTo tpc-dr ~ collect_stats.sh
+    cp collect_stats.sh ~
+    
+    echo "Start the run remotely"
+    runAt tpc-g screen -d -m ~/collect_stats.sh $1
+    runAt tpc-dr screen -d -m ~/collect_stats.sh $1
+    # start local
+    screen -d -m ~/collect_stats.sh $1
+} 2>&1  | tee -a $LOG_FILE
 
-# start remotely
-runAt tpc- screen -d -m ~/collect_stats.sh $1
-# start local
-screen -d -m ~/collect_stats.sh $1
+log "done"

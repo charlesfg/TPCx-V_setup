@@ -47,7 +47,7 @@ ssh tpc-driver uptime
 # ensure that the VDriver remote dir is mounted
 ./ensure_mounted_runs_dir.sh
 
-ssh tpc-tenant 'find ~ -name tc_tester\*.log -exec rm  {} \; '
+#ssh tpc-tenant 'find ~ -name tc_tester\*.log -exec rm  {} \; '
 
 runAt tpc-g 'bash ~/clean_caches.sh'
 runAt tpc-g 'bash ~/clean_space_centos.sh'
