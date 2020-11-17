@@ -1,0 +1,31 @@
+#!/bin/sh
+# Script to be used with the xen-tools automation tool as a role
+# Was designed to automate a vm to run a stress-ng run
+
+# Check
+# man xen-create-image
+
+prefix=$1
+
+
+#
+#  Source our common functions - this will let us install a Debian package.
+#
+if [ -e /usr/share/xen-tools/common.sh ]; then
+    . /usr/share/xen-tools/common.sh
+else
+    echo "Installation problem"
+fi
+
+logMessage Script $0 starting
+
+#logMessage "Install the wget package"
+#installDebianPackage ${prefix} wget
+#
+logMessage "Setup ssh access to Oxum user"
+
+cd ${prefix}/root
+mkdir .ssh
+echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCfngTUI9tEpHdu/FCqcZOFcLEmV9+6k5CYVQT2/Jkx/ASCpHB3jtrlgBp/OAFSZ2np+QSSj1f+1msnG4zw2Poe5myVRIOKueZduRk9qlGOgid6Gc16CkOxRet7qgPHj2845DphDB39kAlrxJ6ZHb2GIt1UYxa7jSa8z3CiscT5sKucbTCdjcdJ3m5r7OjgqQ4NdjHk0g6cmlDMZneqni+RMt/Fv/JLtw4BbToLOicn6o9BB4E0HX6YPPf5qVzkJif12PHrzRf+OwxuwtYRfeJUjSF5+yRT7fD4B1DIGEariaAveho8rU1vE9inx7rWcB0ZTjaGJFPEuSvdeA0Xjepp root@oxum' >> .ssh/authorized_keys
+chmod 600 .ssh/authorized_keys
+
