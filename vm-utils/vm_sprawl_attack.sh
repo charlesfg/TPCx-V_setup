@@ -26,6 +26,15 @@ fi
 
 END=$1
 
+function test_finished(){
+    if [ $SECONDS -ge $END ];
+    then
+        log "Test timeout $SECONDS > $END .."
+        return 0
+    fi
+    return 1
+}
+
 function start_vm(){
    local cnf=$1
    shift
@@ -62,6 +71,10 @@ log "Starting VM-Sprawl attack that will took ${END} seconds (after setup)"
     
     while [ ${#f[@]} -gt 0 ];
     do
+        if test_finished;
+        then 
+            break
+        fi
         i=${f[0]}
         f=(${f[@]:1})
         #    xen-create-image --install-method=tar --install-source=/var/tpcv/xen_images/sprawl.tar \
@@ -74,11 +87,6 @@ log "Starting VM-Sprawl attack that will took ${END} seconds (after setup)"
             err_cnt=$(($err_cnt+1))
             log "Error on creating VM-Sprawl $i, $err_cnt error"
             sleep $SLEEP_TIME
-            if [ $err_cnt -eq 21 ];
-            then
-                log "Max error reached, giving up ..."
-                break
-            fi
         fi
         log "Remaining VMs to create ${f[@]}"
     done
@@ -90,25 +98,28 @@ log "Checking if every vm is up"
 if test $(xl list  | grep sprawl- | awk '{print $1}' | wc -l) -eq 35;
 then
     log "Setup done!"
-    log "Waiting ${END} Seconds"
-    
-    sleep $END
+    TO_END=$(($END - $SECONDS))
+    if ! test_finished;
+    then
+        log "Waiting ${END} Seconds"
+        sleep $END
+    fi
     xl list | fgrep sprawl- | awk '{print $2}' | xargs -n1 xl shutdown
     log "VM-Sprawl attack done"
     log "Done!!! $(($SECONDS/60)) minutes elapsed"
-    return 0
+    exit 0
 else
     log "Not every VM it's up:"
-    log $(xl list  | grep sprawl- | awk '{print $1}' | sorprawl_attack.sh )
-    sleep 3
+    log $(xl list  | grep sprawl- | awk '{print $1}' | sort)
+    while ! test_finished;
+    do
+        sleep 3
+    done
     xl list | fgrep sprawl- | awk '{print $2}' | xargs -n1 xl destroy
     log "VM-Sprawl attack FAILED"
     log "Done!!! $(($SECONDS/60)) minutes elapsed"
-    return 1
+    exit 0
 fi
-
-
-
 
 
 

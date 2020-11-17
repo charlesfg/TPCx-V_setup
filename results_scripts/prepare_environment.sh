@@ -63,15 +63,15 @@ ssh tpc-driver 'cd /opt/runs && bash -x kill_run.sh'
 
 
 # Start the load on the tpc-tenant performing a cleaning before
-for i in tpc-tenant tpc-tenant2 tpc-tenant3;
-do
-    ssh $i screen -d -m su wl_user -c /home/wl_user/kill_background_work.sh
-done
-
-for i in tpc-tenant tpc-tenant2 tpc-tenant3;
-do
-    ssh $i screen -d -m su wl_user -c /home/wl_user/run_background_work.sh
-done
+# for i in tpc-tenant tpc-tenant2 tpc-tenant3;
+# do
+#     ssh $i screen -d -m su wl_user -c /home/wl_user/kill_background_work.sh
+# done
+# 
+# for i in tpc-tenant tpc-tenant2 tpc-tenant3;
+# do
+#     ssh $i screen -d -m su wl_user -c /home/wl_user/run_background_work.sh
+# done
 
 
 # Start Network Monitor
