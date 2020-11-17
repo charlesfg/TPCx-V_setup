@@ -1,0 +1,13 @@
+# Configurations
+
+
+## v2
+
+ - All 4 group vms from the Benchmark plus 3 tenants in Oxum
+ - Tpc Driver outside
+
+## v3
+
+   - All Benchmark plus 1 tenant in Oxum  (incluing the TPC-Driver)
+
+

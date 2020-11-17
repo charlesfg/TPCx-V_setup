@@ -1,3 +1,14 @@
+function log_default_name
+{
+    local F=$(basename -- "$0")
+    echo ${F%.*}_$(date +"%Y%m%d_%H%M%S").log
+}
+# Sinple function to the $LOG_FILE defined variable
+function log
+{
+  echo "$(date +%c)  -- $@" | tee -a $LOG_FILE  
+}
+
 #!/bin/bash
 # Usage :
 # $1 ->target filter
@@ -44,7 +55,22 @@ function runAt(){
 }
 
 
-alias runatall="runAt tpc-"
-alias runata="runAt tpc-g[0-9]a"
-alias runatb="runAt tpc-g[0-9]b"
+function AsyncRunAt(){
+    TARGET=$1
+    shift;
+    for i in `cat /etc/hosts | grep $TARGET | awk '{print $2}'`; do  
+        echo $i; 
+        ssh $i "$@" &
+    done
+}
 
+function vm_is_running(){
+    VM_ID=$1
+    if test $(xl list $VM_ID | grep -v State | awk '{print $5}' | grep '[rb]' | wc -l ) -eq 1;
+    then
+        return 0
+    else
+        return 1
+    fi
+}
+LOG_FILE=$(log_default_name)

@@ -5,6 +5,7 @@ source ./common_functions.sh
 
 #kill stats
 runAt tpc- 'pkill -f collect_stats.sh'
+pkill -f collect_stats.sh
 
 # sync stats
 cd /var/tpcv/sar_logs
