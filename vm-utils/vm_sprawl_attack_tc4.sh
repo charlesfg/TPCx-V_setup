@@ -82,7 +82,7 @@ log "Starting VM-Sprawl attack that will took ${END} seconds (after setup)"
     declare -a f
     err_cnt=0
     
-    f=($(seq -w 1 35))
+    f=($(seq -w 1 50))
     
     while [ ${#f[@]} -gt 0 ];
     do
