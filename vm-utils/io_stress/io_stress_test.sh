@@ -70,14 +70,14 @@ function start_vm(){
    return 1
 }
 
-
+set -e
+RET_COND=1
 END=$1
 {
 
     echo "Ensuring that all test vms are dowm"
     stop_vms "tpc-tenant"
 
-    set -e
     echo "Starting the VMs"
     start_vm tpc-tenant
     start_vm tpc-tenant2
@@ -93,14 +93,16 @@ END=$1
     ssh tpc-tenant2 screen -d -m bash workload.sh ${END}
     ssh tpc-tenant3 screen -d -m bash workload.sh ${END}
     set +e
+    
+    log "Sleeping wainting the test time"
+    sleep ${END}
+    RET_COND=0
 
 
 } 2>&1 |tee -a $LOG_FILE 
 
-log "Sleeping wainting the test time"
-sleep ${END}
 log "Force vms ending"
 stop_vms "tpc-tenant"
 log "Test finished after ${SECONDS} seconds"
 
-return 0
+exit ${RET_COND}
