@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2f255874-bdc4-435d-9a35-629b0c94b543" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/TPCx-V_setup.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TPCx-V_setup.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vm-utils/errors_xen.py" beforeDir="false" afterPath="$PROJECT_DIR$/vm-utils/errors_xen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +37,7 @@
       <updated>1605739738450</updated>
       <workItem from="1605739739544" duration="4348000" />
       <workItem from="1605780870709" duration="599000" />
+      <workItem from="1606392546471" duration="1198000" />
     </task>
     <servers />
   </component>

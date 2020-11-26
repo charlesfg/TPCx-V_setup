@@ -66,7 +66,6 @@ function start_vm(){
    fi
 
    log "Couldn't start  VM $vm_id"
-   xen-delete-image --dir=/var/tpcv/xen_images/disposable/ --hostname=dsprawl-${i}
 
    return 1
 }
@@ -74,11 +73,12 @@ function start_vm(){
 
 END=$1
 {
-    echo "Starting the VMs"
 
     echo "Ensuring that all test vms are dowm"
     stop_vms "tpc-tenant"
 
+    set -e
+    echo "Starting the VMs"
     start_vm tpc-tenant
     start_vm tpc-tenant2
     start_vm tpc-tenant3
@@ -92,6 +92,7 @@ END=$1
     ssh tpc-tenant screen -d -m bash workload.sh ${END}
     ssh tpc-tenant2 screen -d -m bash workload.sh ${END}
     ssh tpc-tenant3 screen -d -m bash workload.sh ${END}
+    set +e
 
 
 } 2>&1 |tee -a $LOG_FILE 
@@ -102,3 +103,4 @@ log "Force vms ending"
 stop_vms "tpc-tenant"
 log "Test finished after ${SECONDS} seconds"
 
+return 0
