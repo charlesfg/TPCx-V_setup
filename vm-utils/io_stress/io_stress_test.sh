@@ -70,19 +70,28 @@ function start_vm(){
    return 1
 }
 
-set -e
 RET_COND=1
 END=$1
+
+log "Ensuring that all test vms are dowm"
+stop_vms "tpc-tenant"
+
+set -e
+log "Starting the VMs"
+start_vm tpc-tenant
+start_vm tpc-tenant2
+start_vm tpc-tenant3
+
+if vm_is_running tpc-tenant && vm_is_running tpc-tenant2 && vm_is_running tpc-tenant3
+then
+    log "all vms are up"
+else
+    log "error on launching the vms"
+    return 1
+fi
+
+
 {
-
-    echo "Ensuring that all test vms are dowm"
-    stop_vms "tpc-tenant"
-
-    echo "Starting the VMs"
-    start_vm tpc-tenant
-    start_vm tpc-tenant2
-    start_vm tpc-tenant3
-
     echo "copying the workload into the vms "
     scp workload.sh tpc-tenant:~
     scp workload.sh tpc-tenant2:~
@@ -92,17 +101,17 @@ END=$1
     ssh tpc-tenant screen -d -m bash workload.sh ${END}
     ssh tpc-tenant2 screen -d -m bash workload.sh ${END}
     ssh tpc-tenant3 screen -d -m bash workload.sh ${END}
-    set +e
     
     log "Sleeping wainting the test time"
     sleep ${END}
-    RET_COND=0
 
 
 } 2>&1 |tee -a $LOG_FILE 
 
+RET_COND=0
+set +e
 log "Force vms ending"
 stop_vms "tpc-tenant"
 log "Test finished after ${SECONDS} seconds"
-
+log "Exiting with ${RET_COND}"
 exit ${RET_COND}
