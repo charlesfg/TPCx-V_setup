@@ -4,9 +4,14 @@ function log_default_name
     echo ${F%.*}_$(date +"%Y%m%d_%H%M%S").log
 }
 # Sinple function to the $LOG_FILE defined variable
+function ilog
+{
+  echo "$(date +%c)  -- $@"
+}
+
 function log
 {
-  echo "$(date +%c)  -- $@" | tee -a $LOG_FILE  
+    ilog $@ | tee -a $LOG_FILE  
 }
 
 #!/bin/bash
