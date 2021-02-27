@@ -1,39 +1,7 @@
 #!/usr/bin/env bash
 
-# Usage :
-# $1 ->target filter
-# $2 ->directory target
-# $3 ->files
-function copyTo(){
-    TARGET=$1
-    shift;
-    TARGET_DIR=$1
-    shift;
-    for i in `cat /etc/hosts | grep $TARGET | awk '{print $2}'`; do
-        echo $i;
-        scp $@ ${i}:${TARGET_DIR}
-    done
-}
 
-
-alias copytoall="copyTo tpc-g"
-alias copytoa="copyTo tpc-g[0-9]a"
-alias copytob="copyTo tpc-g[0-9]b"
-
-
-function runAt(){
-    TARGET=$1
-    shift;
-    for i in `cat /etc/hosts | grep $TARGET | awk '{print $2}'`; do
-        echo $i;
-        ssh $i $@;
-    done
-}
-
-
-alias runatall="runAt tpc-g"
-alias runata="runAt tpc-g[0-9]a"
-alias runatb="runAt tpc-g[0-9]b"
+source  common_functions.sh 
 
 SECONDS=0
 
@@ -49,14 +17,15 @@ ssh tpc-driver uptime
 
 #ssh tpc-tenant 'find ~ -name tc_tester\*.log -exec rm  {} \; '
 
-runAt tpc-g 'bash ~/clean_caches.sh'
-runAt tpc-g 'bash ~/clean_space_centos.sh'
+AsyncRunAt tpc-g 'bash ~/clean_caches.sh'
+AsyncRunAt tpc-g 'bash ~/clean_space_centos.sh'
 #runAt tpc-g 'test -e /dbstore/backup && rm -rf /dbstore/backup/*'
-runAt tpc-g 'test -e /dbstore/tpcv-data/pg_log && rm -rf /dbstore/tpcv-data/pg_log/*'
+AsyncRunAt tpc-g 'test -e /dbstore/tpcv-data/pg_log && rm -rf /dbstore/tpcv-data/pg_log/*'
 #runAt tpc-g 'psql -U tpcv -c VACUUM'
 # Restore the database database
 #copyTo tpc-g.b ~ restore_db.sh
 #runAt tpc-g.b 'bash restore_db.sh'
+wait
 ./check_dbs_connectivity.sh
 
 ssh tpc-driver 'cd /opt/runs && bash -x kill_run.sh'
