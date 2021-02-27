@@ -1,0 +1,73 @@
+#!/bin/bash
+
+#
+#  Source our common functions 
+#
+
+E_BADARGS=85
+
+SECONDS=0
+SLEEP_TIME=7
+
+if [ -e ~/common.sh ]; then
+    . ~/common.sh
+else
+    echo "Common functions not present, exiting!"
+    exit;
+fi
+
+function help(){
+    log "Usage: `basename $0` <duration> <domU> <hex_value> <region> <order>"
+    log "\t<duration> seconds to wait for return"
+    log "\t<domU> Domain Name (eg. tpc-g1a)>"
+    log "\t<hex_value> Hex value to pass to write function"
+    log "\t<region> one of 'stack', 'heap', 'vdso', 'vvar'"
+    log "\t<order> one of 'first', 'last', 'random'"
+    exit $E_BADARGS
+}
+
+if [ $# -lt 6 ]
+then
+    help
+fi
+
+re='^[0-9]+$'
+if ! [[ $1 =~ $re ]] ; then
+       log "error: <duration> "$1" is not a number" >&2; 
+       help
+fi
+
+DURATION=$1
+
+DOMU=$2
+
+if ! [[ $4 =~ ^(stack|heap|vdso|vvar)$ ]] ; then
+       log "error: <region> "$4" is not valid" >&2; 
+       help
+fi
+
+REGION=$4
+
+if ! [[ $5 =~ ^(first|last|random)$ ]] ; then
+       log "error: <order> "$5" is not valid" >&2; 
+       help
+fi
+
+ORDER=$5
+
+{
+    set -e 
+
+    cd /var/tpcv/xen-utils/attacks/vm2handler
+
+    ./vm2handler.py -H $DOMU --region $REGION -a write --hex $3 -s tpcdbcli -o $ORDER -d  
+
+    ilog "Waiting until duration to finish"
+    TO_END=$(($DURATION - $SECONDS))
+    if [ $TO_END -ge 0 ];
+    then
+        ilog "Waiting ${TO_END} Seconds until leaving"
+        sleep $TO_END
+    fi
+    ilog "Done!!! $(($SECONDS/60)) minutes elapsed"
+} 2>&1 |tee -a $LOG_FILE  
