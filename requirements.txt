@@ -13,7 +13,7 @@ enum34==1.1.6
 functools32==3.2.3.post2
 html5lib==0.9999999
 ipykernel==4.5.2
-ipython==5.2.2
+ipython==7.16.3
 ipython-genutils==0.1.0
 ipywidgets==5.2.2
 Jinja2==2.9.5
